@@ -29,16 +29,18 @@ public class SecurityConfiguration{
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web -> web
                             .ignoring().antMatchers("/users/open")
-                            .antMatchers("/users/login"));
+                            .antMatchers("/users/login")
+                .and());
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .authorizeHttpRequests((authz) -> authz
-                        .anyRequest().authenticated()
-                )
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/user/**").authenticated()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .httpBasic(withDefaults())

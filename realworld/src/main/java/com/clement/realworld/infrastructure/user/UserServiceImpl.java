@@ -7,6 +7,7 @@ import com.clement.realworld.domain.user.UserService;
 import com.clement.realworld.domain.user.dto.UserDto;
 import com.clement.realworld.domain.user.dto.UserLoginDto;
 import com.clement.realworld.domain.user.dto.UserRegistrationDto;
+import com.clement.realworld.domain.user.dto.UserUpdateDto;
 import com.clement.realworld.domain.user.role.ERole;
 import com.clement.realworld.domain.user.role.Role;
 import com.clement.realworld.domain.user.role.RoleRepository;
@@ -54,10 +55,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        return UserDto.builder()
-                            .username(user.getUsername())
-                            .email(user.getEmail())
-                            .build();
+        return convertToUserDto(user, null);
     }
 
     @Override
@@ -67,19 +65,52 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), userLoginDto.getPassword()));
 
+        String accessToken = jwtProvider.generateAccessToken(authentication);
 
+        return convertToUserDto(user, accessToken);
+    }
+
+    @Override
+    public UserDto getCurrentUser(String username, String token) {
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
+
+        return convertToUserDto(user, token);
+    }
+
+    @Override
+    public UserDto updateUser(UserUpdateDto userUpdateDto, String username, String token) {
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
+
+        if(userUpdateDto.getEmail() != null)
+            user.setEmail(userUpdateDto.getEmail());
+
+        if(userUpdateDto.getUsername() != null)
+            user.setUsername(userUpdateDto.getUsername());
+
+        if(userUpdateDto.getPassword() != null)
+            user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
+
+        if(userUpdateDto.getImage() != null)
+            user.setImage(userUpdateDto.getImage());
+
+        if(userUpdateDto.getBio() != null)
+            user.setBio(userUpdateDto.getBio());
+
+        userRepository.save(user);
+
+        return convertToUserDto(user, token);
+    }
+
+    private UserDto convertToUserDto(User user, String token) {
         return UserDto.builder()
                 .email(user.getEmail())
-                .token(jwtProvider.generateAccessToken(authentication))
+                .token(token)
                 .username(user.getUsername())
                 .bio(user.getBio())
                 .image(user.getImage())
                 .build();
-    }
-
-    @Override
-    public User getUser(Long id) {
-        return null;
     }
 
 }
