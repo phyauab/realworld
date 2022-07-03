@@ -1,5 +1,6 @@
 package com.clement.realworld.domain.user.role;
 
+import com.clement.realworld.domain.common.BaseEntity;
 import com.clement.realworld.domain.user.role.ERole;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,12 +11,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-public class Role {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Role extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)

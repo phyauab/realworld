@@ -1,5 +1,6 @@
 package com.clement.realworld.domain.user;
 
+import com.clement.realworld.domain.common.BaseEntity;
 import com.clement.realworld.domain.user.role.Role;
 import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,11 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
 
     @NotBlank
     @Size(max = 20)
