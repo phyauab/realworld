@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -30,6 +31,7 @@ public class SecurityConfiguration{
         return (web -> web
                             .ignoring().antMatchers("/users/open")
                             .antMatchers("/users/login")
+                .antMatchers("/profiles")
                 .and());
     }
 
@@ -40,6 +42,9 @@ public class SecurityConfiguration{
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/user/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/profiles/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/profiles/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/profiles/**").authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
