@@ -45,6 +45,7 @@ public class SecurityConfiguration{
                 .antMatchers(HttpMethod.GET, "/profiles/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/profiles/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/profiles/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/articles/**").authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
