@@ -6,10 +6,13 @@ import com.clement.realworld.domain.article.ArticleService;
 import com.clement.realworld.domain.article.dto.ArticleDto;
 import com.clement.realworld.domain.article.dto.AuthorDto;
 import com.clement.realworld.domain.article.dto.CreateArticleDto;
+import com.clement.realworld.domain.article.favorite.Favorite;
 import com.clement.realworld.domain.article.tag.Tag;
 import com.clement.realworld.domain.article.tag.TagRepository;
 import com.clement.realworld.domain.user.User;
 import com.clement.realworld.domain.user.UserRepository;
+import com.clement.realworld.domain.user.follow.Follow;
+import com.clement.realworld.domain.user.follow.FollowRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,15 +32,14 @@ public class ArticleServiceImpl implements ArticleService {
     private UserRepository userRepository;
     private ArticleRepository articleRepository;
     private TagRepository tagRepository;
+    private FollowRepository followRepository;
 
     @Override
     @Transactional
     public ArticleDto createArticle(String username, CreateArticleDto createArticleDto) {
 
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
-
         String slug = slugify(createArticleDto.getTitle());
-
         Set<Tag> tags = findOrBuildTagSet(createArticleDto.getTagList());
 
         Article article = Article.builder()
@@ -50,7 +52,20 @@ public class ArticleServiceImpl implements ArticleService {
 
         articleRepository.save(article);
 
-        return convertToDto(article, false, 0, user, false);
+        return convertToDto(article, false, 0, false);
+    }
+
+    @Override
+    public ArticleDto getArticle(String slug, String username) {
+
+        Article article = articleRepository.findBySlug(slug).orElseThrow(() -> new RuntimeException("Article Not Found"));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
+        Optional<Favorite> favorite = articleRepository.findFavoriteByUserIdAndArticleId(user.getId(), article.getId());
+        long favoriteCount = articleRepository.findFavoriteCountByArticleId(article.getId());
+        Optional<Follow> follow = followRepository.findByFolloweeUsernameAndFollowerUsername(article.getAuthor().getUsername(), username);
+
+        return convertToDto(article, favorite.isPresent(), favoriteCount, follow.isPresent());
+
     }
 
     private String slugify(String title) {
@@ -68,7 +83,9 @@ public class ArticleServiceImpl implements ArticleService {
         return slug;
     }
 
-    private ArticleDto convertToDto(Article article, boolean favorited, int favoriteCount, User author, boolean following) {
+    private ArticleDto convertToDto(Article article, boolean favorited, long favoriteCount, boolean following) {
+
+        User author = article.getAuthor();
 
         AuthorDto authorDto = AuthorDto.builder()
                 .username(author.getUsername())

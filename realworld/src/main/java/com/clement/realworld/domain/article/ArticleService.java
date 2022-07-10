@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface ArticleService {
 
     ArticleDto createArticle(String username, CreateArticleDto createArticleDto);
+    ArticleDto getArticle(String slug, String username);
 
 }

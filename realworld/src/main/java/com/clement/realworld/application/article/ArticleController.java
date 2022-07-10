@@ -6,10 +6,7 @@ import com.clement.realworld.domain.article.dto.CreateArticleDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -23,6 +20,11 @@ public class ArticleController {
     @PostMapping
     public ResponseEntity<?> createArticle(Principal principal, @RequestBody CreateArticleDto createArticleDto) {
         return new ResponseEntity<>(articleService.createArticle(principal.getName(), createArticleDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{slug}")
+    public ResponseEntity<?> getArticle(Principal principal, @PathVariable("slug") String slug) {
+        return new ResponseEntity<>(articleService.getArticle(slug, principal.getName()), HttpStatus.OK);
     }
 
 }

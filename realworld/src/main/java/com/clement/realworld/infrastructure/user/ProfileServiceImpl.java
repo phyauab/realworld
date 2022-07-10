@@ -53,7 +53,6 @@ public class ProfileServiceImpl implements ProfileService {
             throw new RuntimeException("You have not followed " + username);
 
         User followee = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
-        User follower = userRepository.findByUsername(currentUsername).orElseThrow(() -> new RuntimeException("User Not Found"));
 
         Follow follow = followRepository.findByFolloweeUsernameAndFollowerUsername(username, currentUsername)
                                         .orElseThrow(() -> new RuntimeException("Follow Not Found"));

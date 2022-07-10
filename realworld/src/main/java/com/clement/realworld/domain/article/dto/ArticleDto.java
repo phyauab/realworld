@@ -29,7 +29,7 @@ public class ArticleDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean favorited;
-    private int favoritesCount;
+    private long favoritesCount;
     private AuthorDto author;
 
 }
