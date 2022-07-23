@@ -42,4 +42,10 @@ public class ArticleController {
         return new ResponseEntity<>(articleService.listArticles(username, articleListParam), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{slug}/favorite")
+    public ResponseEntity<?> unfavoriteArticle(Principal principal, @PathVariable("slug") String slug) {
+        String username = principal == null ? null : principal.getName();
+        return new ResponseEntity<>(articleService.unfavoriteArticle(username, slug), HttpStatus.OK);
+    }
+
 }

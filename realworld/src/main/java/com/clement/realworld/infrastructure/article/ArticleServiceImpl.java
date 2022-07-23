@@ -90,7 +90,6 @@ public class ArticleServiceImpl implements ArticleService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
         Article article = articleRepository.findBySlug(slug).orElseThrow(() -> new RuntimeException("Article Not Found"));
         Optional<Favorite> favorite = articleRepository.findFavoriteByUserIdAndArticleId(user.getId(), article.getId());
-        long favoriteCount = articleRepository.findFavoriteCountByArticleId(article.getId());
         Optional<Follow> follow = followRepository.findByFolloweeUsernameAndFollowerUsername(article.getAuthor().getUsername(), username);
 
         if(favorite.isEmpty()) {
@@ -98,7 +97,25 @@ public class ArticleServiceImpl implements ArticleService {
             favoriteRepository.save(newFavorite);
         }
 
+        long favoriteCount = articleRepository.findFavoriteCountByArticleId(article.getId());
+
         return new SingleArticle(convertToDto(article, true, favoriteCount, follow.isPresent()));
+    }
+
+    @Override
+    public SingleArticle unfavoriteArticle(String username, String slug) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
+        Article article = articleRepository.findBySlug(slug).orElseThrow(() -> new RuntimeException("Article Not Found"));
+        Optional<Favorite> favorite = articleRepository.findFavoriteByUserIdAndArticleId(user.getId(), article.getId());
+        Optional<Follow> follow = followRepository.findByFolloweeUsernameAndFollowerUsername(article.getAuthor().getUsername(), username);
+
+        if(favorite.isPresent()) {
+            favoriteRepository.delete(favorite.get());
+        }
+
+        long favoriteCount = articleRepository.findFavoriteCountByArticleId(article.getId());
+
+        return new SingleArticle(convertToDto(article, false, favoriteCount, follow.isPresent()));
     }
 
     private String slugify(String title) {
