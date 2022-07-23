@@ -5,6 +5,7 @@ import com.clement.realworld.domain.article.ArticleRepository;
 import com.clement.realworld.domain.article.ArticleService;
 import com.clement.realworld.domain.article.dto.*;
 import com.clement.realworld.domain.article.favorite.Favorite;
+import com.clement.realworld.domain.article.favorite.FavoriteRepository;
 import com.clement.realworld.domain.article.tag.Tag;
 import com.clement.realworld.domain.article.tag.TagRepository;
 import com.clement.realworld.domain.user.User;
@@ -27,6 +28,7 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleRepository articleRepository;
     private TagRepository tagRepository;
     private FollowRepository followRepository;
+    private FavoriteRepository favoriteRepository;
 
     @Override
     @Transactional
@@ -80,6 +82,23 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         return new MultipleArticles(articleDtos, articleDtos.size());
+    }
+
+    @Override
+    public SingleArticle favoriteArticle(String username, String slug) {
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
+        Article article = articleRepository.findBySlug(slug).orElseThrow(() -> new RuntimeException("Article Not Found"));
+        Optional<Favorite> favorite = articleRepository.findFavoriteByUserIdAndArticleId(user.getId(), article.getId());
+        long favoriteCount = articleRepository.findFavoriteCountByArticleId(article.getId());
+        Optional<Follow> follow = followRepository.findByFolloweeUsernameAndFollowerUsername(article.getAuthor().getUsername(), username);
+
+        if(favorite.isEmpty()) {
+            Favorite newFavorite = new Favorite(user, article);
+            favoriteRepository.save(newFavorite);
+        }
+
+        return new SingleArticle(convertToDto(article, true, favoriteCount, follow.isPresent()));
     }
 
     private String slugify(String title) {

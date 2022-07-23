@@ -24,6 +24,12 @@ public class ArticleController {
         return new ResponseEntity<>(articleService.createArticle(principal.getName(), createArticleDto), HttpStatus.CREATED);
     }
 
+    @PostMapping("/{slug}/favorite")
+    public ResponseEntity<?> favoriteArticle(Principal principal, @PathVariable("slug") String slug) {
+        String username = principal == null ? null : principal.getName();
+        return new ResponseEntity<>(articleService.favoriteArticle(username, slug), HttpStatus.OK);
+    }
+
     @GetMapping("/{slug}")
     public ResponseEntity<?> getArticle(Principal principal, @PathVariable("slug") String slug) {
         String username = principal == null ? null : principal.getName();

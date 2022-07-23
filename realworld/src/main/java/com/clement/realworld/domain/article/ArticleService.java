@@ -12,5 +12,6 @@ public interface ArticleService {
     SingleArticle createArticle(String username, CreateArticleDto createArticleDto);
     SingleArticle getArticle(String slug, String username);
     MultipleArticles listArticles(String username, ArticleListParam articleListParam);
+    SingleArticle favoriteArticle(String username, String slug);
 
 }
