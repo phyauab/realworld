@@ -23,6 +23,11 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query("SELECT COUNT(f) FROM Favorite f WHERE f.article.id = :articleId")
     long findFavoriteCountByArticleId(@Param("articleId") Long articleId);
 
+    @Query("SELECT a FROM Article a " +
+            "LEFT JOIN Favorite f ON f.article.id = a.id " +
+            "WHERE 1=1 OR f.user.username = :favorited")
+    List<Article> findAll(@Param("favorited") String favorited);
+
     Optional<Article> findBySlug(String slug);
 
 

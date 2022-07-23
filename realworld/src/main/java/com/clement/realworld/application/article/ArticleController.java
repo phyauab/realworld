@@ -2,7 +2,9 @@ package com.clement.realworld.application.article;
 
 import com.clement.realworld.domain.article.ArticleService;
 import com.clement.realworld.domain.article.dto.ArticleDto;
+import com.clement.realworld.domain.article.dto.ArticleListParam;
 import com.clement.realworld.domain.article.dto.CreateArticleDto;
+import com.clement.realworld.domain.article.dto.SingleArticle;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,14 @@ public class ArticleController {
 
     @GetMapping("/{slug}")
     public ResponseEntity<?> getArticle(Principal principal, @PathVariable("slug") String slug) {
-        return new ResponseEntity<>(articleService.getArticle(slug, principal.getName()), HttpStatus.OK);
+        String username = principal == null ? null : principal.getName();
+        return new ResponseEntity<>(articleService.getArticle(slug, username) ,HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getArticles(Principal principal, ArticleListParam articleListParam) {
+        String username = principal == null ? null : principal.getName();
+        return new ResponseEntity<>(articleService.listArticles(username, articleListParam), HttpStatus.OK);
     }
 
 }

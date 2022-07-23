@@ -3,9 +3,7 @@ package com.clement.realworld.infrastructure.article;
 import com.clement.realworld.domain.article.Article;
 import com.clement.realworld.domain.article.ArticleRepository;
 import com.clement.realworld.domain.article.ArticleService;
-import com.clement.realworld.domain.article.dto.ArticleDto;
-import com.clement.realworld.domain.article.dto.AuthorDto;
-import com.clement.realworld.domain.article.dto.CreateArticleDto;
+import com.clement.realworld.domain.article.dto.*;
 import com.clement.realworld.domain.article.favorite.Favorite;
 import com.clement.realworld.domain.article.tag.Tag;
 import com.clement.realworld.domain.article.tag.TagRepository;
@@ -15,14 +13,10 @@ import com.clement.realworld.domain.user.follow.Follow;
 import com.clement.realworld.domain.user.follow.FollowRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +30,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public ArticleDto createArticle(String username, CreateArticleDto createArticleDto) {
+    public SingleArticle createArticle(String username, CreateArticleDto createArticleDto) {
 
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
         String slug = slugify(createArticleDto.getTitle());
@@ -52,20 +46,40 @@ public class ArticleServiceImpl implements ArticleService {
 
         articleRepository.save(article);
 
-        return convertToDto(article, false, 0, false);
+        return new SingleArticle(convertToDto(article, false, 0, false));
     }
 
     @Override
-    public ArticleDto getArticle(String slug, String username) {
+    public SingleArticle getArticle(String slug, String username) {
 
         Article article = articleRepository.findBySlug(slug).orElseThrow(() -> new RuntimeException("Article Not Found"));
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
-        Optional<Favorite> favorite = articleRepository.findFavoriteByUserIdAndArticleId(user.getId(), article.getId());
+        Optional<User> user = userRepository.findByUsername(username);
+        Long userId = user.isPresent() ? user.get().getId() : null;
+        Optional<Favorite> favorite = articleRepository.findFavoriteByUserIdAndArticleId(userId, article.getId());
         long favoriteCount = articleRepository.findFavoriteCountByArticleId(article.getId());
         Optional<Follow> follow = followRepository.findByFolloweeUsernameAndFollowerUsername(article.getAuthor().getUsername(), username);
 
-        return convertToDto(article, favorite.isPresent(), favoriteCount, follow.isPresent());
+        return new SingleArticle(convertToDto(article, favorite.isPresent(), favoriteCount, follow.isPresent()));
 
+    }
+
+    @Override
+    public MultipleArticles listArticles(String username, ArticleListParam articleListParam) {
+        Optional<User> user = userRepository.findByUsername(username);
+        Long userId = user.isPresent() ? user.get().getId() : null;
+
+        List<Article> articles = articleRepository.findAll();
+        List<ArticleDto> articleDtos = new ArrayList<>();
+
+        for(Article article : articles) {
+            Optional<Favorite> favorite = articleRepository.findFavoriteByUserIdAndArticleId(userId, article.getId());
+            long favoriteCount = articleRepository.findFavoriteCountByArticleId(article.getId());
+            Optional<Follow> follow = followRepository.findByFolloweeUsernameAndFollowerUsername(article.getAuthor().getUsername(), username);
+            ArticleDto articleDto = convertToDto(article, favorite.isPresent(), favoriteCount, follow.isPresent());
+            articleDtos.add(articleDto);
+        }
+
+        return new MultipleArticles(articleDtos, articleDtos.size());
     }
 
     private String slugify(String title) {
