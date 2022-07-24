@@ -1,6 +1,8 @@
 package com.clement.realworld.application.article;
 
 import com.clement.realworld.domain.article.ArticleService;
+import com.clement.realworld.domain.article.comment.CommentService;
+import com.clement.realworld.domain.article.comment.CreateCommentDto;
 import com.clement.realworld.domain.article.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import java.security.Principal;
 public class ArticleController {
 
     private ArticleService articleService;
+    private CommentService commentService;
 
     @PostMapping
     public ResponseEntity<?> createArticle(Principal principal, @RequestBody CreateArticleDto createArticleDto) {
@@ -25,6 +28,14 @@ public class ArticleController {
     public ResponseEntity<?> favoriteArticle(Principal principal, @PathVariable("slug") String slug) {
         String username = principal == null ? null : principal.getName();
         return new ResponseEntity<>(articleService.favoriteArticle(username, slug), HttpStatus.OK);
+    }
+
+    @PostMapping("/{slug}/comments")
+    public ResponseEntity<?> addComment(Principal principal,
+                                        @PathVariable("slug") String slug,
+                                        @RequestBody CreateCommentDto createCommentDto) {
+        String username = principal == null ? null : principal.getName();
+        return new ResponseEntity<>(commentService.addComment(username, slug, createCommentDto), HttpStatus.OK);
     }
 
     @GetMapping("/{slug}")

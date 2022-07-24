@@ -3,6 +3,8 @@ package com.clement.realworld.infrastructure.article;
 import com.clement.realworld.domain.article.Article;
 import com.clement.realworld.domain.article.ArticleRepository;
 import com.clement.realworld.domain.article.ArticleService;
+import com.clement.realworld.domain.article.comment.CreateCommentDto;
+import com.clement.realworld.domain.article.comment.SingleComment;
 import com.clement.realworld.domain.article.dto.*;
 import com.clement.realworld.domain.article.favorite.Favorite;
 import com.clement.realworld.domain.article.favorite.FavoriteRepository;

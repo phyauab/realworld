@@ -1,9 +1,7 @@
 package com.clement.realworld.domain.article;
 
 import com.clement.realworld.domain.article.dto.*;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface ArticleService {
 
     SingleArticle createArticle(String username, CreateArticleDto createArticleDto);
