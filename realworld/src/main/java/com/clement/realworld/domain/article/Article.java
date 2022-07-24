@@ -28,6 +28,9 @@ public class Article extends BaseEntity {
     @NotBlank
     private String description;
 
+    @NotBlank
+    private String body;
+
     @ManyToOne
     @JoinColumn(name="author_id")
     private User author;

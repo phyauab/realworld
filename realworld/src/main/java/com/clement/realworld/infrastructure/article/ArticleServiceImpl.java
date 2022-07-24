@@ -42,6 +42,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .title(createArticleDto.getTitle())
                 .slug(slug)
                 .description(createArticleDto.getDescription())
+                .body(createArticleDto.getBody())
                 .author(user)
                 .tags(tags)
                 .build();
@@ -82,6 +83,32 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         return new MultipleArticles(articleDtos, articleDtos.size());
+    }
+
+    @Override
+    public SingleArticle updateArticle(String username, String slug, UpdateArticleDto updateArticleDto) {
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
+        Article article = articleRepository.findBySlug(slug).orElseThrow(() -> new RuntimeException("Article Not Found"));
+
+        if(updateArticleDto.getTitle() != null && !article.getTitle().contentEquals(updateArticleDto.getTitle())) {
+            article.setTitle(updateArticleDto.getTitle());
+            String newSlug = slugify(updateArticleDto.getTitle());
+            article.setSlug(newSlug);
+        }
+
+        if(updateArticleDto.getDescription() != null)
+            article.setDescription(updateArticleDto.getDescription());
+
+        if(updateArticleDto.getBody() != null)
+            article.setBody(updateArticleDto.getBody());
+
+        Article updatedArticle = articleRepository.save(article);
+        Optional<Favorite> favorite = articleRepository.findFavoriteByUserIdAndArticleId(user.getId(), article.getId());
+        Optional<Follow> follow = followRepository.findByFolloweeUsernameAndFollowerUsername(article.getAuthor().getUsername(), username);
+        long favoriteCount = articleRepository.findFavoriteCountByArticleId(article.getId());
+
+        return new SingleArticle(convertToDto(updatedArticle, favorite.isPresent(), favoriteCount, follow.isPresent()));
     }
 
     @Override
@@ -152,7 +179,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .slug(article.getSlug())
                 .title(article.getTitle())
                 .description(article.getDescription())
-                .body(article.getDescription())
+                .body(article.getBody())
                 .tagList(tagList)
                 .createdAt(article.getCreatedAt())
                 .updatedAt(article.getUpdatedAt())
