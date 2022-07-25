@@ -50,6 +50,12 @@ public class ArticleController {
         return new ResponseEntity<>(articleService.listArticles(username, articleListParam), HttpStatus.OK);
     }
 
+    @GetMapping("/{slug}/comments")
+    public ResponseEntity<?> getComments(Principal principal, @PathVariable("slug") String slug) {
+        String username = principal == null ? null : principal.getName();
+        return new ResponseEntity<>(commentService.getCommentsByArticleSlug(username, slug), HttpStatus.OK);
+    }
+
     @PutMapping("/{slug}")
     public ResponseEntity<?> updateArticle(Principal principal,
                                            @PathVariable("slug") String slug,

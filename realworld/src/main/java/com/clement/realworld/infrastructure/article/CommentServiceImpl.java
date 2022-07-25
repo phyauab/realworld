@@ -12,6 +12,8 @@ import com.clement.realworld.domain.user.follow.FollowRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,6 +40,20 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.save(comment);
 
         return new SingleComment(convertToDto(comment, follow.isPresent()));
+    }
+
+    @Override
+    public MultipleComments getCommentsByArticleSlug(String username, String slug) {
+
+        List<Comment> comments = commentRepository.findByArticleSlug(slug);
+        List<CommentDto> commentDtos = new ArrayList<>();
+        for(Comment comment : comments) {
+            Optional<Follow> follow = followRepository.findByFolloweeUsernameAndFollowerUsername(comment.getAuthor().getUsername(), username);
+            CommentDto commentDto = convertToDto(comment, follow.isPresent());
+            commentDtos.add(commentDto);
+        }
+
+        return new MultipleComments(commentDtos);
     }
 
     @Override
