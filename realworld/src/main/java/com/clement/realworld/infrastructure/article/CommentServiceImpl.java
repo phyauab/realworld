@@ -40,6 +40,21 @@ public class CommentServiceImpl implements CommentService {
         return new SingleComment(convertToDto(comment, follow.isPresent()));
     }
 
+    @Override
+    public void deleteComment(String username, String slug, Long id) {
+
+        boolean exists = userRepository.existsByUsername(username);
+        if(!exists)
+            throw new RuntimeException("User Not Found");
+
+        Comment comment = commentRepository.findByIdAndArticleSlug(id, slug).orElseThrow(() -> new RuntimeException("Comment Not Found"));
+
+        if(!comment.getAuthor().getUsername().contentEquals(username))
+            throw new RuntimeException("Only the author is allowed to delete the comment");
+
+        commentRepository.delete(comment);
+    }
+
     private CommentDto convertToDto(Comment comment, boolean following) {
         User author = comment.getAuthor();
 

@@ -58,10 +58,21 @@ public class ArticleController {
         return new ResponseEntity<>(articleService.updateArticle(username, slug, updateArticleDto), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{slug}/comments/{id}")
+    public ResponseEntity<?> deleteComment(Principal principal,
+                                           @PathVariable("slug") String slug,
+                                           @PathVariable("id") Long id){
+        String username = principal == null ? null : principal.getName();
+        commentService.deleteComment(username, slug, id);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{slug}/favorite")
     public ResponseEntity<?> unfavoriteArticle(Principal principal, @PathVariable("slug") String slug) {
         String username = principal == null ? null : principal.getName();
         return new ResponseEntity<>(articleService.unfavoriteArticle(username, slug), HttpStatus.OK);
     }
+
+
 
 }
