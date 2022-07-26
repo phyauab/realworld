@@ -64,6 +64,13 @@ public class ArticleController {
         return new ResponseEntity<>(articleService.updateArticle(username, slug, updateArticleDto), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{slug}")
+    public ResponseEntity<?> deleteArticle(Principal principal, @PathVariable("slug") String slug) {
+        String username = principal == null ? null : principal.getName();
+        articleService.deleteArticle(username, slug);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{slug}/comments/{id}")
     public ResponseEntity<?> deleteComment(Principal principal,
                                            @PathVariable("slug") String slug,

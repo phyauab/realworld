@@ -38,4 +38,11 @@ public class Article extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Tag> tags;
 
+    public void removeAllTags() {
+        for(Tag tag : tags) {
+            tag.getArticles().remove(this);
+        }
+        tags.removeAll(tags);
+    }
+
 }

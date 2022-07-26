@@ -17,4 +17,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Optional<Comment> findByIdAndArticleSlug(@Param("id") Long id, @Param("slug") String slug);
 
     List<Comment> findByArticleSlug(String slug);
+
 }

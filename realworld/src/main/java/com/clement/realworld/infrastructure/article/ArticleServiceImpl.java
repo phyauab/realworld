@@ -3,6 +3,8 @@ package com.clement.realworld.infrastructure.article;
 import com.clement.realworld.domain.article.Article;
 import com.clement.realworld.domain.article.ArticleRepository;
 import com.clement.realworld.domain.article.ArticleService;
+import com.clement.realworld.domain.article.comment.Comment;
+import com.clement.realworld.domain.article.comment.CommentRepository;
 import com.clement.realworld.domain.article.comment.CreateCommentDto;
 import com.clement.realworld.domain.article.comment.SingleComment;
 import com.clement.realworld.domain.article.dto.*;
@@ -31,6 +33,7 @@ public class ArticleServiceImpl implements ArticleService {
     private TagRepository tagRepository;
     private FollowRepository followRepository;
     private FavoriteRepository favoriteRepository;
+    private CommentRepository commentRepository;
 
     @Override
     @Transactional
@@ -111,6 +114,23 @@ public class ArticleServiceImpl implements ArticleService {
         long favoriteCount = articleRepository.findFavoriteCountByArticleId(article.getId());
 
         return new SingleArticle(convertToDto(updatedArticle, favorite.isPresent(), favoriteCount, follow.isPresent()));
+    }
+
+    @Override
+    @Transactional
+    public void deleteArticle(String username, String slug) {
+
+        Article article = articleRepository.findBySlug(slug).orElseThrow(() -> new RuntimeException("Article Not Found"));
+        if(!article.getAuthor().getUsername().contentEquals(username))
+            throw new RuntimeException("Only the author is allowed to delete the article");
+
+        List<Comment> comments = commentRepository.findByArticleSlug(slug);
+        List<Favorite> favorites = favoriteRepository.findByArticleSlug(slug);
+
+        commentRepository.deleteAll(comments);
+        favoriteRepository.deleteAll(favorites);
+        article.removeAllTags();
+        articleRepository.delete(article);
     }
 
     @Override
