@@ -45,6 +45,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public MultipleComments getCommentsByArticleSlug(String username, String slug) {
 
+        articleRepository.findBySlug(slug).orElseThrow(()-> new RuntimeException("Article Not Found"));
+
         List<Comment> comments = commentRepository.findByArticleSlug(slug);
         List<CommentDto> commentDtos = new ArrayList<>();
         for(Comment comment : comments) {
