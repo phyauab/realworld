@@ -18,6 +18,7 @@ import com.clement.realworld.domain.user.follow.Follow;
 import com.clement.realworld.domain.user.follow.FollowRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,7 +77,11 @@ public class ArticleServiceImpl implements ArticleService {
         Optional<User> user = userRepository.findByUsername(username);
         Long userId = user.isPresent() ? user.get().getId() : null;
 
-        List<Article> articles = articleRepository.findAll();
+        Pageable pageable = PageRequest.of(articleListParam.getOffset()/ articleListParam.getLimit(), articleListParam.getLimit());
+        List<Article> articles = articleRepository.findAll(articleListParam.getFavorited(),
+                                                            articleListParam.getAuthor(),
+                                                            articleListParam.getTag(),
+                                                            pageable);
         List<ArticleDto> articleDtos = new ArrayList<>();
 
         for(Article article : articles) {

@@ -43,6 +43,7 @@ public class SecurityConfiguration{
                 .authorizeRequests()
                 .antMatchers("/user/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/profiles/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/user").authenticated()
                 .antMatchers(HttpMethod.POST, "/profiles/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/profiles/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/articles/**").authenticated()
