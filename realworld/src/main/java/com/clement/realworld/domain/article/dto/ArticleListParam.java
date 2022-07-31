@@ -10,8 +10,8 @@ public class ArticleListParam {
     private String tag;
     private String author;
     private String favorited;
-    private int limit = 10;
-    private int offset = 0;
+    private Integer limit;
+    private Integer offset;
 
 
 }
