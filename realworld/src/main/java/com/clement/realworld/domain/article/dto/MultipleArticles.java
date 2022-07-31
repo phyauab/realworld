@@ -14,6 +14,6 @@ import java.util.List;
 public class MultipleArticles {
 
     private List<ArticleDto> articles;
-    private int count;
+    private int articlesCount;
 
 }
