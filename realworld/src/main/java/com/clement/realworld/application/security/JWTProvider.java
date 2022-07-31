@@ -31,8 +31,8 @@ public class JWTProvider {
     // Retrieve jwt from header
     public String parseJWT(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if(bearerToken != null && bearerToken.length() > 0 && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring("Bearer ".length());
+        if(bearerToken != null && bearerToken.length() > 0 && bearerToken.startsWith("Token ")) {
+            return bearerToken.substring("Token ".length());
         }
         return null;
     }
