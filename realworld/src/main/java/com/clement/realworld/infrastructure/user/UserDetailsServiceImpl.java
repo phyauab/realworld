@@ -3,7 +3,6 @@ package com.clement.realworld.infrastructure.user;
 import com.clement.realworld.domain.user.User;
 import com.clement.realworld.domain.user.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

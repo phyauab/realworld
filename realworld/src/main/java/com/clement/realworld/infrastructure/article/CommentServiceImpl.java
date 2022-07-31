@@ -4,7 +4,6 @@ import com.clement.realworld.domain.article.Article;
 import com.clement.realworld.domain.article.ArticleRepository;
 import com.clement.realworld.domain.article.comment.*;
 import com.clement.realworld.domain.article.dto.AuthorDto;
-import com.clement.realworld.domain.article.favorite.Favorite;
 import com.clement.realworld.domain.user.User;
 import com.clement.realworld.domain.user.UserRepository;
 import com.clement.realworld.domain.user.follow.Follow;

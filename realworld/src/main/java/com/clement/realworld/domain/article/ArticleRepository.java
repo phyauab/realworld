@@ -1,7 +1,6 @@
 package com.clement.realworld.domain.article;
 
 import com.clement.realworld.domain.article.favorite.Favorite;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

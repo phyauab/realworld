@@ -4,7 +4,6 @@ import com.clement.realworld.domain.user.dto.UserDto;
 import com.clement.realworld.domain.user.dto.UserLoginDto;
 import com.clement.realworld.domain.user.dto.UserRegistrationDto;
 import com.clement.realworld.domain.user.dto.UserUpdateDto;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService {
 

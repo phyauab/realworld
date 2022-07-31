@@ -5,8 +5,6 @@ import com.clement.realworld.domain.article.ArticleRepository;
 import com.clement.realworld.domain.article.ArticleService;
 import com.clement.realworld.domain.article.comment.Comment;
 import com.clement.realworld.domain.article.comment.CommentRepository;
-import com.clement.realworld.domain.article.comment.CreateCommentDto;
-import com.clement.realworld.domain.article.comment.SingleComment;
 import com.clement.realworld.domain.article.dto.*;
 import com.clement.realworld.domain.article.favorite.Favorite;
 import com.clement.realworld.domain.article.favorite.FavoriteRepository;
