@@ -75,7 +75,11 @@ public class ArticleServiceImpl implements ArticleService {
         Optional<User> user = userRepository.findByUsername(username);
         Long userId = user.isPresent() ? user.get().getId() : null;
 
-        Pageable pageable = PageRequest.of(articleListParam.getOffset()/ articleListParam.getLimit(), articleListParam.getLimit());
+        Pageable pageable = null;
+        if(articleListParam.getOffset() != null && articleListParam.getLimit() != null) {
+            pageable = PageRequest.of(articleListParam.getOffset() / articleListParam.getLimit(),
+                                            articleListParam.getLimit());
+        }
         List<Article> articles = articleRepository.findAll(articleListParam.getFavorited(),
                                                             articleListParam.getAuthor(),
                                                             articleListParam.getTag(),
