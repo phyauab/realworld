@@ -10,6 +10,7 @@ import com.clement.realworld.domain.article.favorite.Favorite;
 import com.clement.realworld.domain.article.favorite.FavoriteRepository;
 import com.clement.realworld.domain.article.tag.Tag;
 import com.clement.realworld.domain.article.tag.TagRepository;
+import com.clement.realworld.domain.common.Pagination;
 import com.clement.realworld.domain.user.User;
 import com.clement.realworld.domain.user.UserRepository;
 import com.clement.realworld.domain.user.follow.Follow;
@@ -94,6 +95,27 @@ public class ArticleServiceImpl implements ArticleService {
             articleDtos.add(articleDto);
         }
 
+        return new MultipleArticles(articleDtos, articleDtos.size());
+    }
+
+    @Override
+    public MultipleArticles feedArticles(String username, Pagination pagination) {
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
+        Pageable pageable = null;
+        if(pagination.getOffset() != null && pagination.getLimit() != null) {
+            pageable = PageRequest.of(pagination.getOffset() / pagination.getLimit(),
+                    pagination.getLimit());
+        }
+        List<Article> articles = articleRepository.findFeedArticles(username, pageable);
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        for(Article article : articles) {
+            Optional<Favorite> favorite = articleRepository.findFavoriteByUserIdAndArticleId(user.getId(), article.getId());
+            long favoriteCount = articleRepository.findFavoriteCountByArticleId(article.getId());
+            Optional<Follow> follow = followRepository.findByFolloweeUsernameAndFollowerUsername(article.getAuthor().getUsername(), username);
+            ArticleDto articleDto = convertToDto(article, favorite.isPresent(), favoriteCount, follow.isPresent());
+            articleDtos.add(articleDto);
+        }
         return new MultipleArticles(articleDtos, articleDtos.size());
     }
 

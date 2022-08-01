@@ -29,11 +29,18 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             "LEFT JOIN a.tags t " +
             "WHERE (:favorited IS NULL OR u.username = :favorited)" +
             "   AND (:author IS NULL OR au.username = :author)" +
-            "   AND (:tag IS NULL OR :tag IN t.name)")
+            "   AND (:tag IS NULL OR :tag IN t.name)" +
+            "ORDER BY a.createdAt desc")
     List<Article> findAll(@Param("favorited") String favorited,
                           @Param("author") String author,
                           @Param("tag") String tag,
                           Pageable pageable);
+
+    @Query("SELECT DISTINCT a FROM Article a " +
+            "JOIN a.author au " +
+            "JOIN Follow f ON f.followee = au " +
+            "WHERE f.follower.username = :username")
+    List<Article> findFeedArticles(@Param("username") String username, Pageable pageable);
 
     Optional<Article> findBySlug(String slug);
 

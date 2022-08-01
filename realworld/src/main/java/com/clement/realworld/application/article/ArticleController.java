@@ -4,7 +4,9 @@ import com.clement.realworld.domain.article.ArticleService;
 import com.clement.realworld.domain.article.comment.CommentService;
 import com.clement.realworld.domain.article.comment.CreateCommentDto;
 import com.clement.realworld.domain.article.dto.*;
+import com.clement.realworld.domain.common.Pagination;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +50,12 @@ public class ArticleController {
     public ResponseEntity<?> getArticles(Principal principal, ArticleListParam articleListParam) {
         String username = principal == null ? null : principal.getName();
         return new ResponseEntity<>(articleService.listArticles(username, articleListParam), HttpStatus.OK);
+    }
+
+    @GetMapping("/feed")
+    public ResponseEntity<?> getFeedArticles(Principal principal, Pagination pagination) {
+        String username = principal == null ? null : principal.getName();
+        return new ResponseEntity<>(articleService.feedArticles(username, pagination), HttpStatus.OK);
     }
 
     @GetMapping("/{slug}/comments")
