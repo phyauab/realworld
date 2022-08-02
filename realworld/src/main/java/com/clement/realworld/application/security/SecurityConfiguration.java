@@ -46,6 +46,7 @@ public class SecurityConfiguration{
                 .antMatchers(HttpMethod.GET, "/user").authenticated()
                 .antMatchers(HttpMethod.POST, "/profiles/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/profiles/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/articles/feed").authenticated()
                 .antMatchers(HttpMethod.POST, "/articles/**").authenticated()
                 .antMatchers(HttpMethod.PUT, "/articles/**").authenticated()
                 .and()
