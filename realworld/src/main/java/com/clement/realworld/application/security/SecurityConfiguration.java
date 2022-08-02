@@ -49,13 +49,13 @@ public class SecurityConfiguration{
                 .antMatchers(HttpMethod.GET, "/articles/feed").authenticated()
                 .antMatchers(HttpMethod.POST, "/articles/**").authenticated()
                 .antMatchers(HttpMethod.PUT, "/articles/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/articles/**").authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .httpBasic(withDefaults())
                 .addFilterBefore(new JWTFilter(jwtProvider(), userDetailsService), UsernamePasswordAuthenticationFilter.class);
-
-
+        
         return http.build();
     }
 
