@@ -46,9 +46,9 @@ public class UserServiceImpl implements UserService {
                         .roles(roles)
                         .build();
 
-        userRepository.save(user);
+        user = userRepository.save(user);
 
-        return convertToUserDto(user, null);
+        return convertToUserDto(user, jwtProvider.generateAccessToken(user.getUsername()));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), userLoginDto.getPassword()));
 
-        String accessToken = jwtProvider.generateAccessToken(authentication);
+        String accessToken = jwtProvider.generateAccessToken(user.getUsername());
 
         return convertToUserDto(user, accessToken);
     }

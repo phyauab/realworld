@@ -3,9 +3,10 @@ package com.clement.realworld.domain.user;
 import com.clement.realworld.domain.common.BaseEntity;
 import com.clement.realworld.domain.user.role.Role;
 import lombok.*;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

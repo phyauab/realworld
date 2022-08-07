@@ -2,9 +2,6 @@ package com.clement.realworld.application.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,11 +14,10 @@ public class JWTProvider {
 
     private int accessTokenExpiryTimeMs = 600000;
 
-    public String generateAccessToken(Authentication authentication) {
+    public String generateAccessToken(String username) {
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return JWT.create()
-                .withSubject(userDetails.getUsername())
+                .withSubject(username)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date((new Date()).getTime() + accessTokenExpiryTimeMs))
                 .sign(Algorithm.HMAC256(jwtSecret));
