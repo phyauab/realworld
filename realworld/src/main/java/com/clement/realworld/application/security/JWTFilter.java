@@ -1,10 +1,8 @@
 package com.clement.realworld.application.security;
 
-import com.clement.realworld.application.exception.AppException;
-import com.clement.realworld.infrastructure.user.UserDetailsServiceImpl;
+import com.clement.realworld.application.exception.GenericErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,10 +41,11 @@ public class JWTFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            Map<String, String> customResponse = new HashMap<>();
-            customResponse.put("status", "error");
-            customResponse.put("message", "invalid authorization credentials");
-            response.getWriter().write(objectMapper.writeValueAsString(customResponse));
+            GenericErrorResponse genericErrorResponse = new GenericErrorResponse(
+                    "error",
+                    "invalid authorization credentials"
+            );
+            response.getWriter().write(objectMapper.writeValueAsString(genericErrorResponse));
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         }
 

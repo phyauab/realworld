@@ -12,7 +12,7 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 @Getter
 @JsonTypeName(value = "errors")
 @JsonTypeInfo(use = NAME, include = WRAPPER_OBJECT)
-public class Error {
+public class ValidationErrorResponse {
 
     private List<String> body;
 

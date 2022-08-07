@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppException extends RuntimeException {
+public class GenericErrorResponse {
 
     private String status;
     private String message;

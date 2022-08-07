@@ -43,19 +43,27 @@ public class SecurityConfiguration{
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().antMatchers(HttpMethod.POST,"/users/**");
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
                 .csrf().disable()
+
                 .authorizeRequests()
-                .antMatchers("/user/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/users/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/users/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/profiles/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/user").authenticated()
                 .antMatchers(HttpMethod.POST, "/profiles/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/profiles/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/articles/feed").authenticated()
                 .antMatchers(HttpMethod.POST, "/articles/**").authenticated()
                 .antMatchers(HttpMethod.PUT, "/articles/**").authenticated()
+                .antMatchers("/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/articles/**").authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
