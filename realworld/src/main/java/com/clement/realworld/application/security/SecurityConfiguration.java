@@ -43,7 +43,8 @@ public class SecurityConfiguration{
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers(HttpMethod.POST,"/users/**");
+        return (web) -> web.ignoring()
+                .antMatchers(HttpMethod.POST,"/users/**");
     }
 
     @Bean
@@ -51,25 +52,14 @@ public class SecurityConfiguration{
 
         http
                 .csrf().disable()
-
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/users/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/users/**").permitAll()
-                .antMatchers(HttpMethod.PUT, "/users/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/profiles/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/profiles/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/profiles/**").authenticated()
-                .antMatchers(HttpMethod.GET, "/articles/feed").authenticated()
-                .antMatchers(HttpMethod.POST, "/articles/**").authenticated()
-                .antMatchers(HttpMethod.PUT, "/articles/**").authenticated()
-                .antMatchers("/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/articles/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/users/**").authenticated()
+                .antMatchers(HttpMethod.PUT, "/users/**").authenticated()
+                .antMatchers("/articles/**").permitAll()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .httpBasic(withDefaults())
-//                .exceptionHandling().authenticationEntryPoint((req))
-//                .and()
                 .addFilterBefore(new JWTFilter(jwtProvider(), userDetailsService, objectMapper), UsernamePasswordAuthenticationFilter.class);
         
         return http.build();
