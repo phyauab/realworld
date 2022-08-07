@@ -1,10 +1,12 @@
 package com.clement.realworld.application.security;
 
 import com.auth0.jwt.JWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -16,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -27,6 +30,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfiguration{
 
     private UserDetailsService userDetailsService;
+    private ObjectMapper objectMapper;
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -57,7 +61,9 @@ public class SecurityConfiguration{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .httpBasic(withDefaults())
-                .addFilterBefore(new JWTFilter(jwtProvider(), userDetailsService), UsernamePasswordAuthenticationFilter.class);
+//                .exceptionHandling().authenticationEntryPoint((req))
+//                .and()
+                .addFilterBefore(new JWTFilter(jwtProvider(), userDetailsService, objectMapper), UsernamePasswordAuthenticationFilter.class);
         
         return http.build();
     }

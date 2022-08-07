@@ -38,13 +38,8 @@ public class JWTProvider {
     }
 
     public boolean validateJWT(String jwt) {
-        try {
-            JWT.decode(jwt);
-            return true;
-        } catch (JWTDecodeException e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
+        JWT.decode(jwt);
+        return true;
     }
 
     public String getUsername(String jwt) {
