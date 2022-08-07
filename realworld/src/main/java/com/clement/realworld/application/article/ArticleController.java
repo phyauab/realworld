@@ -6,7 +6,6 @@ import com.clement.realworld.domain.article.comment.CreateCommentDto;
 import com.clement.realworld.domain.article.dto.*;
 import com.clement.realworld.domain.common.Pagination;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

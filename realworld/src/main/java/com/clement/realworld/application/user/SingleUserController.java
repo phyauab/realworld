@@ -1,15 +1,12 @@
 package com.clement.realworld.application.user;
 
-import com.clement.realworld.application.security.JWTProvider;
 import com.clement.realworld.domain.user.UserService;
 import com.clement.realworld.domain.user.dto.UserUpdateDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @RestController
