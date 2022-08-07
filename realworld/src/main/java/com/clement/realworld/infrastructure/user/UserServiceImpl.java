@@ -1,5 +1,6 @@
 package com.clement.realworld.infrastructure.user;
 
+import com.clement.realworld.application.exception.ValidationException;
 import com.clement.realworld.application.security.JWTProvider;
 import com.clement.realworld.domain.user.User;
 import com.clement.realworld.domain.user.UserRepository;
@@ -54,7 +55,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto login(UserLoginDto userLoginDto) {
 
-        User user = userRepository.findByEmail(userLoginDto.getEmail()).orElseThrow(()-> new RuntimeException("User Not Found"));
+        User user = userRepository.findByEmail(userLoginDto.getEmail())
+                .orElseThrow(()-> new ValidationException("email or password", "is invalid"));
+
+        if(!userLoginDto.getPassword().contentEquals(passwordEncoder.encode(userLoginDto.getPassword())))
+            throw new ValidationException("email or password", "is invalid");
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), userLoginDto.getPassword()));
 
