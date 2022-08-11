@@ -13,9 +13,6 @@ import com.clement.realworld.domain.user.role.ERole;
 import com.clement.realworld.domain.user.role.Role;
 import com.clement.realworld.domain.user.role.RoleRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +27,6 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
     private JWTProvider jwtProvider;
-    private AuthenticationManager authenticationManager;
 
     @Override
     public UserDto register(UserRegistrationDto userRegistrationDto) {
@@ -58,11 +54,8 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(userLoginDto.getEmail())
                 .orElseThrow(()-> new ValidationException("email or password", "is invalid"));
 
-        if(!userLoginDto.getPassword().contentEquals(passwordEncoder.encode(userLoginDto.getPassword())))
+        if(!passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword()))
             throw new ValidationException("email or password", "is invalid");
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), userLoginDto.getPassword()));
 
         String accessToken = jwtProvider.generateAccessToken(user.getUsername());
 
