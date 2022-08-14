@@ -21,7 +21,7 @@ public class SingleUserController {
         return new ResponseEntity<>(
                 userService.getCurrentUser(
                         principal.getName(),
-                        token.substring("Bearer ".length())),
+                        token.substring("Token ".length())),
                 HttpStatus.OK);
     }
 
@@ -31,13 +31,8 @@ public class SingleUserController {
                 userService.updateUser(
                         userUpdateDto,
                         principal.getName(),
-                        token.substring("Bearer ".length())),
+                        token.substring("Token ".length())),
                 HttpStatus.OK);
-    }
-
-    @PutMapping("haha")
-    public String a() {
-        return "?";
     }
 
 }
