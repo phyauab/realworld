@@ -222,9 +222,12 @@ public class ArticleServiceImpl implements ArticleService {
                 .following(following)
                 .build();
 
-        Set<String> tagList = article.getTags().stream()
-                .map(tag -> tag.getName())
-                .collect(Collectors.toSet());
+        Set<String> tagList = null;
+        if(article.getTags() != null) {
+            tagList = article.getTags().stream()
+                                        .map(tag -> tag.getName())
+                                        .collect(Collectors.toSet());
+        }
 
         return ArticleDto.builder()
                 .slug(article.getSlug())
@@ -241,6 +244,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     private Set<Tag> findOrBuildTagSet(List<String> tagList) {
+
+        if(tagList == null) return null;
+
         Set<Tag> tagSet = new HashSet<>();
         for(String tagName : tagList) {
             Optional<Tag> tag = tagRepository.findByName(tagName);
