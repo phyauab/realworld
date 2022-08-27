@@ -1,5 +1,6 @@
 package com.clement.realworld.domain.article.comment;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +17,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "   AND c.article.slug = :slug")
     Optional<Comment> findByIdAndArticleSlug(@Param("id") Long id, @Param("slug") String slug);
 
-    List<Comment> findByArticleSlug(String slug);
+    List<Comment> findByArticleSlug(String slug, Sort sort);
 
 }

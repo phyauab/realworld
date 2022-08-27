@@ -9,6 +9,7 @@ import com.clement.realworld.domain.user.UserRepository;
 import com.clement.realworld.domain.user.follow.Follow;
 import com.clement.realworld.domain.user.follow.FollowRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class CommentServiceImpl implements CommentService {
 
         articleRepository.findBySlug(slug).orElseThrow(()-> new RuntimeException("Article Not Found"));
 
-        List<Comment> comments = commentRepository.findByArticleSlug(slug);
+        List<Comment> comments = commentRepository.findByArticleSlug(slug, Sort.by(Sort.Direction.DESC, "createdAt"));
         List<CommentDto> commentDtos = new ArrayList<>();
         for(Comment comment : comments) {
             Optional<Follow> follow = followRepository.findByFolloweeUsernameAndFollowerUsername(comment.getAuthor().getUsername(), username);

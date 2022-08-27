@@ -18,6 +18,7 @@ import com.clement.realworld.domain.user.follow.FollowRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -153,7 +154,7 @@ public class ArticleServiceImpl implements ArticleService {
         if(!article.getAuthor().getUsername().contentEquals(username))
             throw new RuntimeException("Only the author is allowed to delete the article");
 
-        List<Comment> comments = commentRepository.findByArticleSlug(slug);
+        List<Comment> comments = commentRepository.findByArticleSlug(slug, Sort.by(Sort.Direction.DESC, "createdAt"));
         List<Favorite> favorites = favoriteRepository.findByArticleSlug(slug);
 
         commentRepository.deleteAll(comments);

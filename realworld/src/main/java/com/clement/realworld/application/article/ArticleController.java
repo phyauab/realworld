@@ -8,6 +8,7 @@ import com.clement.realworld.domain.common.Pagination;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -21,7 +22,7 @@ public class ArticleController {
     private CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<?> createArticle(Principal principal, @RequestBody CreateArticleDto createArticleDto) {
+    public ResponseEntity<?> createArticle(Principal principal, @Validated @RequestBody CreateArticleDto createArticleDto) {
         return new ResponseEntity<>(articleService.createArticle(principal.getName(), createArticleDto), HttpStatus.CREATED);
     }
 
@@ -66,7 +67,7 @@ public class ArticleController {
     @PutMapping("/{slug}")
     public ResponseEntity<?> updateArticle(Principal principal,
                                            @PathVariable("slug") String slug,
-                                           @RequestBody UpdateArticleDto updateArticleDto) {
+                                           @Validated @RequestBody UpdateArticleDto updateArticleDto) {
         String username = principal == null ? null : principal.getName();
         return new ResponseEntity<>(articleService.updateArticle(username, slug, updateArticleDto), HttpStatus.OK);
     }

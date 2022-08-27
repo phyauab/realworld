@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.WRAPPER_OBJECT;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 
@@ -16,8 +18,13 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 @JsonTypeInfo(include = WRAPPER_OBJECT, use = NAME)
 public class UpdateArticleDto {
 
+    @NotBlank
     private String title;
+
+    @NotBlank
     private String description;
+
+    @NotBlank
     private String body;
 
 }
