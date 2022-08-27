@@ -78,8 +78,10 @@ public class UserServiceImpl implements UserService {
         if(userUpdateDto.getEmail() != null)
             user.setEmail(userUpdateDto.getEmail());
 
-        if(userUpdateDto.getUsername() != null)
+        if(userUpdateDto.getUsername() != null) {
             user.setUsername(userUpdateDto.getUsername());
+            token = jwtProvider.generateAccessToken(user.getUsername());
+        }
 
         if(userUpdateDto.getPassword() != null)
             user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
