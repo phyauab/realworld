@@ -2,12 +2,10 @@ package com.clement.realworld.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-@Component
 public class JwtProvider {
 
     private String jwtSecret = "realworld";
