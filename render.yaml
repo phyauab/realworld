@@ -9,8 +9,8 @@ services:
     healthCheckPath: /
     envVars:
       - key: DB_URL
-      - sync: false
+        sync: false
       - key: DB_USER
-      - sync: false
+        sync: false
       - key: DB_PASSWORD
-      - sync: false
+        sync: false
