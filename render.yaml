@@ -8,6 +8,15 @@ services:
     rootDir: realworld
     healthCheckPath: /
     envVars:
-      - key: DB_HOST
+      - key: DB_URL
+      - fromDatabase:
+          name: prod
+          property: host
       - key: DB_USER
+      - fromDatabase:
+          name: prod
+          property: user
       - key: DB_PASSWORD
+      - fromDatabase:
+          name: prod
+          property: password
