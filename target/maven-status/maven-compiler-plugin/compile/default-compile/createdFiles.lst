@@ -1,0 +1,14 @@
+com\clement\realworld\domain\user\dto\UserDTO$UserDTOBuilder.class
+com\clement\realworld\domain\article\dto\AuthorDTO$AuthorDTOBuilder.class
+com\clement\realworld\domain\user\dto\UserDTO.class
+com\clement\realworld\domain\user\dto\UserUpdateDTO.class
+com\clement\realworld\domain\common\BaseEntity.class
+com\clement\realworld\RealworldApplication.class
+com\clement\realworld\domain\article\dto\AuthorDTO.class
+com\clement\realworld\domain\user\role\ERole.class
+com\clement\realworld\domain\article\dto\CreateArticleDTO.class
+com\clement\realworld\domain\article\dto\ArticleDTO.class
+com\clement\realworld\domain\user\dto\UserUpdateDTO$UserUpdateDTOBuilder.class
+com\clement\realworld\domain\article\dto\ArticleDTO$ArticleDTOBuilder.class
+com\clement\realworld\domain\user\role\RoleRepository.class
+com\clement\realworld\domain\user\role\Role.class

@@ -1,3 +1,4 @@
 
 realworld/src/main/resources/application.properties
-realworld/docker-compose.yaml
+docker-compose.yaml
+/.idea/

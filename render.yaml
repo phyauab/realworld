@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: webdis
+    env: docker
+    region: oregon
+    plan: standard
+    branch: main
+    rootDir: realworld
+    healthCheckPath: /
+    envVars:
+      - key: DB_HOST
+      - key: DB_USER
+      - key: DB_PASSWORD
